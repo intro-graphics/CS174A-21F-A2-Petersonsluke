@@ -83,7 +83,7 @@ export class Transforms_Sandbox_Base extends Scene {
         // the shader when coloring shapes.  See Light's class definition for inputs.
         const t = this.t = program_state.animation_time / 1000;
         const angle = Math.sin(t);
-        const light_position = Mat4.rotation(angle, 1, 0, 0).times(vec4(0, -1, 1, 0));
+        const light_position = Mat4.rotation(angle, 1, 1, 1).times(vec4(0, -1, 1, 0));
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
     }
 }
@@ -141,7 +141,7 @@ export class Transforms_Sandbox extends Transforms_Sandbox_Base {
         // shape, and place it at the coordinate origin 0,0,0:
         model_transform = model_transform.times(Mat4.translation(0, 0, 0));
         // Draw the top box:
-        this.shapes.box.draw(context, program_state, model_transform, this.materials.plastic.override(yellow));
+        this.shapes.ball.draw(context, program_state, model_transform, this.materials.plastic.override(blue));
 
         // Tweak our coordinate system downward 2 units for the next shape.
         model_transform = model_transform.times(Mat4.translation(0, -2, 0));
@@ -168,10 +168,10 @@ export class Transforms_Sandbox extends Transforms_Sandbox_Base {
         // one another (new box radius = 2, ball radius = 1, coordinate
         // frame axis is currently doubled in size).
         model_transform = model_transform.times(Mat4.rotation(1, 0, 0, 1))
-            .times(Mat4.scale(1, 2, 1))
-            .times(Mat4.translation(0, -1.5, 0));
+            .times(Mat4.scale(1, 1, 1))
+            .times(Mat4.translation(0, -2, 0));
         // Draw the bottom (child) box:
-        this.shapes.box.draw(context, program_state, model_transform, this.materials.plastic.override(yellow));
+        this.shapes.ball.draw(context, program_state, model_transform, this.materials.plastic.override(blue));
 
         // Note that our coordinate system stored in model_transform still has non-uniform scaling
         // due to our scale() call.  This could have undesired effects for subsequent transforms;

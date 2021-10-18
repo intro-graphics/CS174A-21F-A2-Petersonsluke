@@ -25,17 +25,32 @@ class Cube extends Shape {
 class Cube_Outline extends Shape {
     constructor() {
         super("position", "color");
-        //  TODO (Requirement 5).
-        // When a set of lines is used in graphics, you should think of the list entries as
-        // broken down into pairs; each pair of vertices will be drawn as a line segment.
-        // Note: since the outline is rendered with Basic_shader, you need to redefine the position and color of each vertex
+        //order vertices in pairs
+        this.arrays.position = Vector3.cast(
+        [-1, -1, -1], [1, -1 ,-1], [1, -1, -1], [1, -1, 1], [1, -1, 1],  [-1, -1, 1], [-1, -1, 1], [-1, -1, -1], 
+        [-1, -1, -1], [-1, 1, -1], [-1, 1, -1], [-1, 1, 1],  [-1, 1, 1], [-1, -1, 1], [-1, 1, 1], [1, 1, 1], 
+        [1, 1, 1], [1, -1, 1], [1, 1, 1], [1, 1, -1], [1, 1, -1], [1, -1, -1], [1, 1, -1],  [-1, 1, -1]);
+
+        //set colors to white
+        this.arrays.color = Vector3.cast( 
+        [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1],
+        [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1],
+        [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1]);
+        
+        this.indices = false;
     }
 }
 
 class Cube_Single_Strip extends Shape {
     constructor() {
         super("position", "normal");
-        // TODO (Requirement 6)
+        // set vertices of box layout
+        this.arrays.position = Vector3.cast(
+            [-1, -1, -1], [1, -1, -1], [-1, -1,  1], [1, -1, 1], [1, 1, -1], [-1, 1, -1], [1, 1, 1], [-1, 1, 1]);
+        this.arrays.normal = Vector3.cast(
+            [-1, -1, -1], [1, -1, -1], [-1, -1,  1], [1, -1, 1], [1, 1, -1], [-1, 1, -1], [1, 1, 1], [-1, 1, 1]);
+        // Arrange the vertices into a square shape in texture space too:
+        this.indices.push(2, 3, 6, 2, 7, 6, 2, 7, 0,7, 0, 5, 7, 6, 5, 6, 5, 4, 2, 3, 0, 3, 0, 1, 3, 6, 1, 6, 1, 4, 0, 1, 4, 0, 5, 4);
     }
 }
 
@@ -53,6 +68,7 @@ class Base_Scene extends Scene {
         this.shapes = {
             'cube': new Cube(),
             'outline': new Cube_Outline(),
+            'strip': new Cube_Single_Strip,
         };
 
         // *** Materials
@@ -90,10 +106,33 @@ export class Assignment2 extends Base_Scene {
      * This gives you a very small code sandbox for editing a simple scene, and for
      * experimenting with matrix transformations.
      */
+     constructor() {
+         super();
+         //store random colors
+         this.color1 = color(Math.random(), Math.random(), Math.random(), 1.0);
+         this.color2 = color(Math.random(), Math.random(), Math.random(), 1.0);
+         this.color3 = color(Math.random(), Math.random(), Math.random(), 1.0);
+         this.color4 = color(Math.random(), Math.random(), Math.random(), 1.0);
+         this.color5 = color(Math.random(), Math.random(), Math.random(), 1.0);
+         this.color6 = color(Math.random(), Math.random(), Math.random(), 1.0);
+         this.color7 = color(Math.random(), Math.random(), Math.random(), 1.0);
+         this.color8 = color(Math.random(), Math.random(), Math.random(), 1.0);
+         this.color9 = color(Math.random(), Math.random(), Math.random(), 1.0);
+         this.arr = [this.color2, this.color3, this.color4, this.color5, this.color6, this.color7, this.color8, this.color9];
+     }
+
     set_colors() {
-        // TODO:  Create a class member variable to store your cube's colors.
-        // Hint:  You might need to create a member variable at somewhere to store the colors, using `this`.
-        // Hint2: You can consider add a constructor for class Assignment2, or add member variables in Base_Scene's constructor.
+        // set random colors
+           this.color1 = color(Math.random(), Math.random(), Math.random(), 1.0);
+           this.color2 = color(Math.random(), Math.random(), Math.random(), 1.0);
+           this.color3 = color(Math.random(), Math.random(), Math.random(), 1.0);
+           this.color4 = color(Math.random(), Math.random(), Math.random(), 1.0);
+           this.color5 = color(Math.random(), Math.random(), Math.random(), 1.0);
+           this.color6 = color(Math.random(), Math.random(), Math.random(), 1.0);
+           this.color7 = color(Math.random(), Math.random(), Math.random(), 1.0);
+           this.color8 = color(Math.random(), Math.random(), Math.random(), 1.0);
+           this.color9 = color(Math.random(), Math.random(), Math.random(), 1.0);
+           this.arr = [this.color2, this.color3, this.color4, this.color5, this.color6, this.color7, this.color8, this.color9];
     }
 
     make_control_panel() {
@@ -101,28 +140,70 @@ export class Assignment2 extends Base_Scene {
         this.key_triggered_button("Change Colors", ["c"], this.set_colors);
         // Add a button for controlling the scene.
         this.key_triggered_button("Outline", ["o"], () => {
-            // TODO:  Requirement 5b:  Set a flag here that will toggle your outline on and off
+            // toggle outline on and off
+            this.swarm ^=1;
         });
-        this.key_triggered_button("Sit still", ["m"], () => {
-            // TODO:  Requirement 3d:  Set a flag here that will toggle your swaying motion on and off.
+        this.key_triggered_button("Sit still", ["m"], function () {
+            // toggle swaying motion on and off
+            this.hover ^= 1;
         });
     }
 
-    draw_box(context, program_state, model_transform) {
-        // TODO:  Helper function for requirement 3 (see hint).
-        //        This should make changes to the model_transform matrix, draw the next box, and return the newest model_transform.
-        // Hint:  You can add more parameters for this function, like the desired color, index of the box, etc.
+    draw_box(context, program_state, model_transform, color, index) {
+        // Make changes to the model_transform matrix, draw the next box, and return the newest model_transform.
+        const input = color;
+        let t = program_state.animation_time * Math.PI / 2 / 1000.0;
+        if(!!this.hover) {
+            t = Math.PI / 2;
+        }
+
+        //transform the model transform correctly
+
+        let T1 = Mat4.translation(-1,1.5,0);
+        let S = Mat4.scale(1, 1.5, 1);
+        let Sinv = Mat4.scale(1, 1/1.5, 1);
+        let R = Mat4.rotation(0.05 * Math.PI*Math.abs(Math.sin(t)), 0, 0, 1);
+        let T2 = Mat4.translation(1,1.5,0); 
+        model_transform = model_transform.times(Sinv).times(T1).times(R).times(T2).times(S);
+
+        //acount for toggle switches
+        if (!!this.swarm) {
+              this.shapes.outline.draw(context, program_state, model_transform, this.white, "LINES");
+          }
+        else if (index % 2 == 1) {
+              this.shapes.strip.draw(context, program_state, model_transform, this.materials.plastic.override({color:input}));
+        }
+        else {
+              this.shapes.cube.draw(context, program_state, model_transform, this.materials.plastic.override({color:input}));
+          }
 
         return model_transform;
     }
 
     display(context, program_state) {
-        super.display(context, program_state);
-        const blue = hex_color("#1a9ffa");
-        let model_transform = Mat4.identity();
+          super.display(context, program_state);
+          const blue = color(Math.random(), Math.random(), Math.random(), 1.0);
+          let model_transform = Mat4.identity();
+          let S = Mat4.scale(1, 1.5, 1);
+          model_transform = model_transform.times(S);
 
-        // Example for drawing a cube, you can remove this line if needed
-        this.shapes.cube.draw(context, program_state, model_transform, this.materials.plastic.override({color:blue}));
-        // TODO:  Draw your entire scene here.  Use this.draw_box( graphics_state, model_transform ) to call your helper.
+           //set first cube
+          if (!!this.swarm) {
+              this.shapes.outline.draw(context, program_state, model_transform, this.white, "LINES");
+          }
+          else {
+          this.shapes.strip.draw(context, program_state, model_transform, this.materials.plastic.override({color:this.color1}));
+          }
+
+        let index = 0;
+
+        //draw next seven cubes
+
+        for(let i = 0; i < 7; i++) {
+            index = i+2;
+            const c = this.arr[i];
+            this.draw_box(context, program_state, model_transform, c, index);
+            model_transform = this.draw_box(context, program_state, model_transform, c, index);
+        }
     }
 }
